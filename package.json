@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "hex2dec": "1.1.2",
+    "prettier-plugin-svelte": "^2.5.0",
     "svelte": "^3.32.3"
   },
   "scripts": {

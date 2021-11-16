@@ -1,14 +1,15 @@
 <script>
-  let count = 0;
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
 
   function handleClick() {
-    count += 1;
-  }
+		dispatch('reset');
+	}
 </script>
 
 <button on:click={handleClick}>
-  Clicked {count}
-  {count === 1 ? "time" : "times"}
+  Reset
 </button>
 
 <style>

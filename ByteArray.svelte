@@ -1,10 +1,10 @@
 <script>
-console.log("gffg");
+export let byteArray 
 </script>
 
 <div>
 	<h2>Byte array</h2>
 	<div>
-		<span>byte array</span>
+		<span>{byteArray}</span>
 	</div>
 </div>

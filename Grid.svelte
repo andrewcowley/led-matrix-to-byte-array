@@ -1,22 +1,12 @@
 <script>
-  import converter from "hex2dec";
-  $: grid = [
-    [false, false, false, false, false, false, false, false],
-    [false, false, false, false, false, false, false, false],
-    [false, false, false, false, false, false, false, false],
-    [false, false, false, false, false, false, false, false],
-    [false, false, false, false, false, false, false, false],
-    [false, false, false, false, false, false, false, false],
-    [false, false, false, false, false, false, false, false],
-    [false, false, false, false, false, false, false, false]
-  ];
+  import { createEventDispatcher } from 'svelte';
+  export let grid;
 
-  $: byteArray = grid.map(item => {
-    const binaryNumber = item.map(value => +value).join("");
-    const hexadecimalNumber = parseInt(`${binaryNumber}`, 2).toString(16);
-    console.log(hexadecimalNumber);
-    return `0x${hexadecimalNumber}`;
-  });
+  const dispatch = createEventDispatcher();
+  
+  function handleClick(msg) {
+    dispatch('boxclick', msg)
+  }
 </script>
 
 <style>
@@ -26,12 +16,9 @@
     background-color: #313131;
   }
   input[type="checkbox"] {
-    /* Add if not using autoprefixer */
     -webkit-appearance: none;
     appearance: none;
-    /* For iOS < 15 to remove gradient background */
     background-color: #fff;
-    /* Not removed via appearance */
     margin: 0 0.1rem 0.1rem 0;
     font: inherit;
     color: currentColor;
@@ -52,14 +39,17 @@
 </style>
 <main>
 <!-- checkboxes -->
-<div class="panel">
-  {#each grid as g}
+<div >
+  Inside Grid component: {grid}
+  <div class="panel">
+  {#each grid as row, i}
     <div>
-      {#each g as a}
-        <input type=checkbox bind:checked={a}>
+      {#each row as a, j}
+        <input type=checkbox bind:checked={a} on:click={() => handleClick({row:i,box:j})}>
       {/each}
     </div>
   {/each}
+</div>
 </div>
 
 <!-- values -->
@@ -72,11 +62,4 @@
     </div>
   {/each}
 </div> -->
-
-<!-- hexidecimal values -->
-<h2>Byte array</h2>
-<div>
-{byteArray}
-</div>
-
 </main>
