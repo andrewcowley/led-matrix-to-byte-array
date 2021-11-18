@@ -91,6 +91,16 @@ var app = (function () {
             }
         };
     }
+    // TODO figure out if we still want to support
+    // shorthand events, or if we want to implement
+    // a real bubbling mechanism
+    function bubble(component, event) {
+        const callbacks = component.$$.callbacks[event.type];
+        if (callbacks) {
+            // @ts-ignore
+            callbacks.slice().forEach(fn => fn.call(this, event));
+        }
+    }
 
     const dirty_components = [];
     const binding_callbacks = [];
@@ -414,7 +424,7 @@ var app = (function () {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*handleClick*/ ctx[0], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[0], false, false, false);
     				mounted = true;
     			}
     		},
@@ -454,13 +464,17 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Button> was created with unknown prop '${key}'`);
     	});
 
+    	function click_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
     	$$self.$capture_state = () => ({
     		createEventDispatcher,
     		dispatch,
     		handleClick
     	});
 
-    	return [handleClick];
+    	return [click_handler];
     }
 
     class Button extends SvelteComponentDev {
@@ -935,7 +949,7 @@ var app = (function () {
 
     	grid_1.$on("boxclick", /*handleCheckBoxClick*/ ctx[2]);
     	button = new Button({ $$inline: true });
-    	button.$on("reset", handleClick);
+    	button.$on("click", /*handleResetClick*/ ctx[3]);
 
     	bytearray = new ByteArray({
     			props: { byteArray: /*byteArray*/ ctx[1] },
@@ -955,9 +969,9 @@ var app = (function () {
     			t4 = text(/*grid*/ ctx[0]);
     			t5 = space();
     			create_component(bytearray.$$.fragment);
-    			add_location(h1, file$3, 46, 1, 1306);
+    			add_location(h1, file$3, 52, 1, 1419);
     			attr_dev(main, "class", "svelte-1na4wt1");
-    			add_location(main, file$3, 45, 0, 1298);
+    			add_location(main, file$3, 51, 0, 1411);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1038,6 +1052,12 @@ var app = (function () {
     		$$invalidate(0, grid = newArray);
     	}
 
+    	function handleResetClick() {
+    		$$invalidate(0, grid = grid.map(row => {
+    			return row.map(box => false);
+    		}));
+    	}
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -1050,6 +1070,7 @@ var app = (function () {
     		ByteArray,
     		handleClick,
     		handleCheckBoxClick,
+    		handleResetClick,
     		grid,
     		byteArray
     	});
@@ -1084,7 +1105,7 @@ var app = (function () {
     		[false, false, false, false, false, false, false, false]
     	]);
 
-    	return [grid, byteArray, handleCheckBoxClick];
+    	return [grid, byteArray, handleCheckBoxClick, handleResetClick];
     }
 
     class App extends SvelteComponentDev {

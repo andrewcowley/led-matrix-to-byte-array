@@ -8,7 +8,7 @@
 	}
 </script>
 
-<button on:click={handleClick}>
+<button on:click>
   Reset
 </button>
 

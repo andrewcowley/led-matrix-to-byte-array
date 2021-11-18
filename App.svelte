@@ -34,6 +34,12 @@
     grid = newArray;
 
   }
+
+  function handleResetClick () {
+    grid = grid.map((row)=> {
+      return row.map((box) =>  false)
+    })
+  }
 </script>
 
 <style>
@@ -47,7 +53,7 @@
 	<h1>Grid of 0 or 1s</h1>
 	
   <Grid grid={grid} on:boxclick={handleCheckBoxClick}/>
-  <Button on:reset={handleClick}/>
+  <Button on:click={handleResetClick}/>
   {grid}
   <ByteArray byteArray={byteArray}/>
 </main>
