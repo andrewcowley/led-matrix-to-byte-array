@@ -2,9 +2,15 @@
   import Button from "./Button.svelte";
   import Grid from "./Grid.svelte";
   import ByteArray from "./ByteArray.svelte";
+  import {chars} from './chars';
+
+  console.log('butts', chars.A)
+
+  let key;
+	let keyCode;
 
   $: grid = [
-    [false, false, false, true, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
     [false, false, false, false, false, false, false, false],
     [false, false, false, false, false, false, false, false],
     [false, false, false, false, false, false, false, false],
@@ -19,10 +25,6 @@
     const hexadecimalNumber = parseInt(`${binaryNumber}`, 2).toString(16);
     return `0x${hexadecimalNumber}`;
   });
-
-  function handleClick (evt) {
-    console.log('hi', evt)
-  }
 
   function handleCheckBoxClick (evt) {
     const {row, box} = evt.detail
@@ -40,6 +42,23 @@
       return row.map((box) =>  false)
     })
   }
+
+  function handleKeydown(event) {
+		key = event.key;
+    let binaryArray = [];
+    if (chars[key]) {
+      // binaryArray = chars[key].map((item)=> `${item}`.toString(2).)
+      chars[key].forEach((row) => {
+        binaryArray.push(parseInt(row, 16).toString(2).padStart(8, '0').split(''))
+      })
+    }
+    console.log(binaryArray)
+    const boolArray = binaryArray.map((row)=> {
+      return row.map((item) => !!+item)
+    })
+    grid = boolArray;
+	}
+
 </script>
 
 <style>
@@ -49,9 +68,11 @@
   }
 </style>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <main>
 	<h1>Grid of 0 or 1s</h1>
-	
+	{key}{keyCode}
   <Grid grid={grid} on:boxclick={handleCheckBoxClick}/>
   <Button on:click={handleResetClick}/>
   {grid}
