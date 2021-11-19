@@ -4,8 +4,6 @@
   import ByteArray from "./ByteArray.svelte";
   import {chars} from './chars';
 
-  console.log('butts', chars.A)
-
   let key;
 	let keyCode;
 
@@ -44,19 +42,16 @@
   }
 
   function handleKeydown(event) {
-		key = event.key;
-    let binaryArray = [];
-    if (chars[key]) {
-      // binaryArray = chars[key].map((item)=> `${item}`.toString(2).)
-      chars[key].forEach((row) => {
-        binaryArray.push(parseInt(row, 16).toString(2).padStart(8, '0').split(''))
+		// TODO handle modified keys in chars object
+    key = event.key;
+    const binaryArray = chars[key].map((item)=>{
+      return parseInt(item, 16).toString(2).padStart(8, '0').split('').reverse()
+    }).map((row) => {
+      return row.map((box)=> {
+        return !!+box;
       })
-    }
-    console.log(binaryArray)
-    const boolArray = binaryArray.map((row)=> {
-      return row.map((item) => !!+item)
     })
-    grid = boolArray;
+    grid = binaryArray;
 	}
 
 </script>
@@ -72,9 +67,7 @@
 
 <main>
 	<h1>Grid of 0 or 1s</h1>
-	{key}{keyCode}
   <Grid grid={grid} on:boxclick={handleCheckBoxClick}/>
   <Button on:click={handleResetClick}/>
-  {grid}
   <ByteArray byteArray={byteArray}/>
 </main>

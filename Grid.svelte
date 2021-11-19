@@ -39,27 +39,15 @@
 </style>
 <main>
 <!-- checkboxes -->
-<div >
-  Inside Grid component: {grid}
-  <div class="panel">
-  {#each grid as row, i}
-    <div>
-      {#each row as a, j}
-        <input type=checkbox bind:checked={a} on:click={() => handleClick({row:i,box:j})}>
+  <div >
+    <div class="panel">
+      {#each grid as row, i}
+        <div>
+          {#each row as a, j}
+            <input type=checkbox bind:checked={a} on:click={() => handleClick({row:i,box:j})}>
+          {/each}
+        </div>
       {/each}
     </div>
-  {/each}
-</div>
-</div>
-
-<!-- values -->
-<!-- <div>
-  {#each grid as g}
-    <div>
-      {#each g as a}
-        {+a}
-      {/each}
-    </div>
-  {/each}
-</div> -->
+  </div>
 </main>
